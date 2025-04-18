@@ -1,0 +1,156 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2822
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww33580\viewh18100\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 #include <iostream>\
+#include <string>\
+#include <ctime>\
+using namespace std;\
+\
+// Structure for coffee order\
+struct CoffeeOrder \{\
+    string type;\
+    string size;\
+\};\
+\
+// Virtual Assistant class\
+class VirtualAssistant \{\
+private:\
+    string assistantName;\
+    CoffeeOrder* order; // Pointer to coffee order\
+\
+public:\
+    // Constructor initializes assistant name and coffee order\
+    VirtualAssistant(string name) \{\
+        assistantName = name;\
+        order = new CoffeeOrder;\
+        order->type = "";\
+        order->size = "";\
+    \}\
+\
+    // Destructor to free memory\
+    ~VirtualAssistant() \{\
+        delete order;\
+    \}\
+\
+    // Welcome message with commands\
+    void greetUser() \{\
+        cout << "Hi! I'm " << assistantName << ", your assistant.\\n";\
+        cout << "Can I assist you with any of these options:\\n";\
+        cout << "- date\\n- workout\\n- order coffee\\n- weather\\n- exit\\n";\
+    \}\
+\
+    // Process user commands\
+    void respondToCommand(string command) \{\
+        // Convert command to lowercase\
+        for (char &c : command) \{\
+            c = tolower(c);\
+        \}\
+\
+        if (command == "date") \{\
+            showDateTime();\
+        \}\
+        else if (command == "order coffee") \{\
+            takeCoffeeOrder();\
+        \}\
+        else if (command == "weather") \{\
+            cout << "It's sunny and warm today!\\n";\
+        \}\
+        else if (command == "workout") \{\
+            showWorkout();\
+        \}\
+        else if (command == "exit") \{\
+            cout << "Goodbye! Have a great day!\\n";\
+        \}\
+        else \{\
+            cout << "Sorry, I don't understand. Try one of the commands listed.\\n";\
+        \}\
+    \}\
+\
+    // Show current date and time\
+    void showDateTime() \{\
+        time_t now = time(0);\
+        tm* localTime = localtime(&now);\
+\
+        int day = localTime->tm_mday;\
+        int month = localTime->tm_mon + 1;\
+        int year = localTime->tm_year + 1900;\
+        int hour = localTime->tm_hour;\
+        int minute = localTime->tm_min;\
+        string ampm = hour >= 12 ? "PM" : "AM";\
+        if (hour > 12) hour -= 12;\
+        if (hour == 0) hour = 12;\
+\
+        cout << "Date: " << month << "/" << day << "/" << year << "\\n";\
+        cout << "Time: " << hour << ":" << (minute < 10 ? "0" : "") << minute << " " << ampm << "\\n";\
+    \}\
+\
+    // Handle coffee ordering\
+    void takeCoffeeOrder() \{\
+        cout << "What coffee would you like? (espresso, latte, cappuccino): ";\
+        string type;\
+        getline(cin, type);\
+        for (char &c : type) \{\
+            c = tolower(c);\
+        \}\
+\
+        if (type != "espresso" && type != "latte" && type != "cappuccino") \{\
+            cout << "Sorry, we only have espresso, latte, or cappuccino.\\n";\
+            return;\
+        \}\
+\
+        cout << "What size? (small, medium, large): ";\
+        string size;\
+        getline(cin, size);\
+        for (char &c : size) \{\
+            c = tolower(c);\
+        \}\
+\
+        if (size != "small" && size != "medium" && size != "large") \{\
+            cout << "Sorry, we only have small, medium, or large.\\n";\
+            return;\
+        \}\
+\
+        order->type = type;\
+        order->size = size;\
+        cout << "Got it! Your order: " << order->size << " " << order->type << "\\n";\
+    \}\
+\
+    // Show workout based on day\
+    void showWorkout() \{\
+        time_t now = time(0);\
+        tm* localTime = localtime(&now);\
+        int day = localTime->tm_wday;\
+\
+        if (day == 0) \{\
+            cout << "Today is Sunday - rest day!\\n";\
+        \}\
+        else if (day == 1 || day == 3 || day == 5) \{\
+            cout << "Today is for leg exercises!\\n";\
+        \}\
+        else \{\
+            cout << "Today is for arm exercises!\\n";\
+        \}\
+    \}\
+\};\
+\
+int main() \{\
+    VirtualAssistant assistant("Luna"); // No pointer for assistant object\
+    assistant.greetUser();\
+\
+    while (true) \{\
+        cout << "\\nWhat would you like? ";\
+        string command;\
+        getline(cin, command);\
+\
+        assistant.respondToCommand(command);\
+        if (command == "exit") \{\
+            break;\
+        \}\
+    \}\
+\
+    return 0;\
+\}}
